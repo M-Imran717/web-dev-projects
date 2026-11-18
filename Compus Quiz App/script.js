@@ -1,9 +1,11 @@
 let statement = document.querySelector('.statement');
 let progressbar = document.querySelector('.progress_bar');
-let options = document.querySelectorAll('.options');
+let options = document.querySelectorAll('.option-text');
 let timer = document.querySelector('.timer');
 let question_no = document.querySelector('.Question_no');
 let remaining_perc = document.querySelector('.Remaining');
+let button = document.querySelector('.button');
+
 // list of questions 
 let questions = [
   {
@@ -109,17 +111,18 @@ let questions = [
 ];
 
 
-
-// Function to display the details of each individual object 
-function FetchQuestions(q,i){
-    let statement = q.statement;
-    let options = q.options;
-    let correct = q.correct;
-
+function ShowQuestions(question){
+  statement.textContent = `${question.statement}`;
+  options[0].textContent = `${question.options[0]}`;
+  options[1].textContent = `${question.options[1]}`;
+  options[2].textContent = `${question.options[2]}`;
+  options[3].textContent = `${question.options[3]}`;
 }
 
-// peice of code to call the FetchQuestions function for all the questions
-let i = 1; 
-for (let q of questions){
-    FetchQuestions(q,i++)
+let quest_no = 0;
+ShowQuestions(questions[0]);
+function GoToNext(){
+  if(quest_no < questions.length -1)
+    quest_no += 1;
+  ShowQuestions(questions[quest_no])
 }
