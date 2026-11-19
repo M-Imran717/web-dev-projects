@@ -126,3 +126,35 @@ function GoToNext(){
     quest_no += 1;
   ShowQuestions(questions[quest_no])
 }
+
+// code to calculate total time
+
+function Cal_Total_Time(total_seconds){
+  let total_hour = Math.floor(total_seconds/3600);
+  let remaining = total_seconds % 3600;
+  let total_min = Math.floor(remaining/60);
+  let total_sec = remaining%60;
+  let total_time = `${String(total_hour).padStart(2,'0')}:${String(total_min).padStart(2,'0')}:${String(total_sec).padStart(2,'0')}`;
+  return total_time;
+}
+
+
+//Now we write code for timer 
+function Timer(time){
+  timer.textContent = Cal_Total_Time(time);
+  time--;
+  if(time > 0){
+    setTimeout(()=>Timer(time),1000);
+  }else{
+    console.log('Time Out : ')
+    return
+  }
+}
+
+//function will take two variables totalquestions,timeforeachquestion
+function Cal_Time_In_Sec(t_quest,time){
+  let total_sec = t_quest * time;
+  return total_sec;
+}
+
+Timer(Cal_Time_In_Sec(20,15))
