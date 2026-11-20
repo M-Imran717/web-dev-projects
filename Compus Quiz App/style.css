@@ -70,7 +70,7 @@ max-width:150px;
 background-color: #5A9BFF;
 border-radius: 999px;
 padding:0.02rem;
-padding-left:1rem;
+padding-left:0.5rem;
 }
 .Quest_count{
     display: flex;

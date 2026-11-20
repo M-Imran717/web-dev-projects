@@ -1,6 +1,7 @@
 let statement = document.querySelector('.statement');
-let progressbar = document.querySelector('.progress_bar');
-let options = document.querySelectorAll('.option-text');
+let progressbar = document.querySelector('.progress');
+let options_text = document.querySelectorAll('.option-text');
+let options = document.querySelectorAll('.options')
 let timer = document.querySelector('.timer');
 let question_no = document.querySelector('.Question_no');
 let remaining_perc = document.querySelector('.Remaining');
@@ -113,18 +114,24 @@ let questions = [
 
 function ShowQuestions(question){
   statement.textContent = `${question.statement}`;
-  options[0].textContent = `${question.options[0]}`;
-  options[1].textContent = `${question.options[1]}`;
-  options[2].textContent = `${question.options[2]}`;
-  options[3].textContent = `${question.options[3]}`;
+  options_text[0].textContent = `${question.options[0]}`;
+  options_text[1].textContent = `${question.options[1]}`;
+  options_text[2].textContent = `${question.options[2]}`;
+  options_text[3].textContent = `${question.options[3]}`;
 }
 
 let quest_no = 0;
 ShowQuestions(questions[0]);
 function GoToNext(){
+  options.forEach((option)=>{
+    option.querySelector('div').style.backgroundColor = 'white';
+  })
+  button.disabled = true;
   if(quest_no < questions.length -1)
     quest_no += 1;
   ShowQuestions(questions[quest_no])
+  change_progress_percent((questions.length),quest_no+1)
+
 }
 
 // code to calculate total time
@@ -134,7 +141,7 @@ function Cal_Total_Time(total_seconds){
   let remaining = total_seconds % 3600;
   let total_min = Math.floor(remaining/60);
   let total_sec = remaining%60;
-  let total_time = `${String(total_hour).padStart(2,'0')}:${String(total_min).padStart(2,'0')}:${String(total_sec).padStart(2,'0')}`;
+  let total_time = `⏰ ${String(total_hour).padStart(2,'0')}:${String(total_min).padStart(2,'0')}:${String(total_sec).padStart(2,'0')}`;
   return total_time;
 }
 
@@ -157,4 +164,42 @@ function Cal_Time_In_Sec(t_quest,time){
   return total_sec;
 }
 
-Timer(Cal_Time_In_Sec(20,15))
+
+//function to calculate the remaining percentage of questions
+function Cal_Percent(t_quest,c_quest){
+  let percent = Math.floor((c_quest/t_quest) * 100);
+  return percent
+}
+
+//function to randomly change the progress bar and remaining percentage
+function change_progress_percent(t_quest,c_quest){
+ let remainingPerc = Cal_Percent(t_quest,c_quest)
+ //set progress_bar 
+ progressbar.value = remainingPerc
+ //set remaining percentage
+ remaining_perc.textContent = `${remainingPerc} %`
+// set question number 
+question_no.textContent = `Question ${c_quest} of ${t_quest}`;
+}
+
+
+// Now we add event listner 
+let selected = false;
+options.forEach((option)=>{
+  option.addEventListener('click',()=>{
+    let id = option.getAttribute('id');
+    if (id == questions[quest_no].correct){
+      option.querySelector('div').style.backgroundColor = 'green';
+    }else{
+      option.querySelector('div').style.backgroundColor = 'red';
+      let idx = questions[quest_no].correct;
+    options[idx].querySelector('div').style.backgroundColor = 'green';
+    }
+    button.disabled = false;
+    if(quest_no == 0 && selected == false){
+      selected = true;
+      Timer(Cal_Time_In_Sec(questions.length , 5));
+    }
+    console.log(id)
+  })
+})
