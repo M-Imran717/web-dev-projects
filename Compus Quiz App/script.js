@@ -8,6 +8,8 @@ let remaining_perc = document.querySelector('.Remaining');
 let button = document.querySelector('.button');
 let main = document.querySelector('main');
 let Result = document.querySelector('.Result');
+let header = document.querySelector('header');
+let footer = document.querySelector('footer');
 // list of questions 
 let questions = [
   {
@@ -165,7 +167,9 @@ function Timer(time){
     if(main.style.display == 'none'){
       return
     }else{
+      header.style.display = 'none';
     main.style.display = 'none';
+    footer.style.display = 'none';
     button.textContent = `Time Out : `;
     ShowResults(correct,wrong);
     return
@@ -228,7 +232,9 @@ options.forEach((option)=>{
 
 // function to show results 
 function ShowResults(correct,wrong){
+   header.style.display = 'none';
   main.style.display =  'none';
+  footer.style.display = 'none';
   Result.style.display = 'block';
   console.log(`Correct Options : ${correct}`)
   console.log(`Wrong Options : ${wrong}`)
