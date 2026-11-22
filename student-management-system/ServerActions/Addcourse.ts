@@ -1,0 +1,58 @@
+"use server";
+
+import { enrollementType } from "@/DataTypes/enrolementType";
+import { redirect } from "next/navigation";
+import clientPromise from "@/lib/db";
+import { revalidatePath } from "next/cache";
+
+export default async function Addcourse(formdata: FormData) {
+  const regId = formdata.get("StudentId") as string;
+  const courseId = formdata.get("courseId") as string;
+  const courseName = formdata.get("courseName") as string;
+  const duration = formdata.get("duration") as string;
+
+  const client = await clientPromise;
+  const database = client.db("StudentManagement");
+
+  const students = database.collection("Students");
+
+  // Find student using Registration ID
+  const student = await students.findOne({
+    regId: regId,
+  });
+
+  if (!student) {
+    console.log(`No student found with Registration ID: ${regId}`);
+    return;
+  }
+
+  const management = database.collection<enrollementType>("Enrolements");
+
+  const studentId = student.id;
+
+  const alreadyEnrolled = await management.findOne({
+    studentId: studentId,
+    courseId: parseInt(courseId),
+  });
+
+  if (alreadyEnrolled) {
+    console.log("Student is already enrolled in this course");
+    redirect("/Courses");
+  }
+
+  const data: enrollementType = {
+    studentId: studentId,
+    courseId: parseInt(courseId),
+    studentregId: student.regId,
+    studentname: student.name,
+    courseName: courseName,
+    duration: duration,
+  };
+
+  const enrolled = await management.insertOne(data);
+
+  console.log("Enrollment inserted:", enrolled);
+
+  revalidatePath("/Courses");
+  redirect("/Courses");
+}
