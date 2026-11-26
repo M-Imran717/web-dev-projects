@@ -27,7 +27,7 @@ export default async function LogOut(formdata: FormData) {
       maxAge: 0, // Expire immediately
     });
 
-    revalidatePath("/");
-    redirect("/");
   }
+  revalidatePath("/");
+    redirect("/");
 }
